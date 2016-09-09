@@ -6,55 +6,6 @@
 using namespace std;
 int **matriz;
 
-class Nodo {
-    private:
-        int valor;
-        //Nodo *esq, *dir;
-
-    public:
-        Nodo *esq, *dir, *pai;
-        // Construtor;
-        Nodo() {
-            esq = NULL;
-            dir = NULL;
-            pai = NULL;
-        }
-        Nodo(int newValor) {
-            this->valor = newValor;
-            esq = NULL;
-            dir = NULL;
-        }
-
-        // Getters e Setters
-        int getValor() {
-            return valor;
-        }
-
-        Nodo *getEsq() {
-            return esq;
-        }
-
-        Nodo *getDir() {
-            return dir;
-        }
-
-        Nodo *getPai() {
-            return pai;
-        }
-
-        void *setEsq(Nodo *Nodo) {
-            esq = Nodo;
-        }
-
-        void *setDir(Nodo *Nodo) {
-            dir = Nodo;
-        }
-        
-        void *setPai(Nodo *Nodo) {
-            pai = Nodo;
-        }  
-};
-
 int *achaEntrada(int x, int y, int max){
     int raiz = -1;
     int *coordenadas = new int[2];
@@ -64,7 +15,7 @@ int *achaEntrada(int x, int y, int max){
     //primeiro caso - quando tenho a linha variando de 0 a lMax e coluna fixa em zero
     if(raiz == -1){
         for(int l = 0; l < y; l++){
-            if(matriz[l][0] == max){
+            if(matriz[l][0] == max-1){
                 raiz = matriz[l][0];
                 coordenadas[0] = l;
                 coordenadas[1] = 0;
@@ -77,7 +28,7 @@ int *achaEntrada(int x, int y, int max){
     //segundo caso - quando tenho a linha fixa em 0 e a coluna variando até cMax
     if(raiz == -1){
         for(int c = 0; c < x; c++){
-            if(matriz[c][0] == max){
+            if(matriz[c][0] == max-1){
                 raiz = matriz[0][c];
                 coordenadas[0] = 0;
                 coordenadas[1] = c;
@@ -90,7 +41,7 @@ int *achaEntrada(int x, int y, int max){
     //terceiro caso - quando tenho a linha fixa em lMax-1 e coluna variando até Cmax
     if(raiz == -1){
         for(int c = 0; c < x; c++){
-            if(matriz[c][y-1] == max){
+            if(matriz[c][y-1] == max-1){
                 raiz = matriz[y-1][c];
                 coordenadas[0] = y-1;
                 coordenadas[1] = c;
@@ -103,7 +54,7 @@ int *achaEntrada(int x, int y, int max){
     //quarto caso - quando tenho a linha variando de 0 a lMax e colina fixa em cMax-1
     if(raiz == -1){
         for(int l = 0; l < y; l++){
-            if(matriz[l][x-1] == max){
+            if(matriz[l][x-1] == max-1){
                 raiz = matriz[l][x-1];
                 coordenadas[0] = l;
                 coordenadas[1] = x-1;
@@ -155,12 +106,18 @@ int main(){
 
     for(i=0; i < linhas; i++){
         for(j=0; j < colunas; j++){
-            cout << setw(3) << matriz[i][j];// setw(3) é o espaçamento
+            cout << setw(4) << matriz[i][j];// setw(3) é o espaçamento
         }
         cout << endl;
     }
 
     int *inicio = new int[2]; //vetor coordenadas do inicio do labirinto
-    inicio = achaEntrada(colunas,linhas,max);
+    inicio = achaEntrada(colunas,linhas,max); //insiro as coordenadas do inicio
+    cout << "Entrada do Labirinto: ";
+    for(int i = 0; i < 2; i++){
+        if(i == 1){ cout << "x"; }
+        cout << inicio[i];
+    }
+    cout << endl;
 
 }
