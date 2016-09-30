@@ -44,7 +44,7 @@ int main(){
 
     for(i=0; i < linhas; i++){
         for(j=0; j < colunas; j++){
-            cout << setw(3) << matriz[i][j];// setw(3) é o espaçamento
+            cout << setw(5) << matriz[i][j];// setw(3) é o espaçamento
         }
         cout << endl;
     }

@@ -6,7 +6,7 @@
 using namespace std;
 int **matriz;
 
-int *achaEntrada(int x, int y, int max){
+int *achaEntrada(int x, int y){
     int raiz = -1;
     int *coordenadas = new int[2];
 
@@ -15,7 +15,7 @@ int *achaEntrada(int x, int y, int max){
     //primeiro caso - quando tenho a linha variando de 0 a lMax e coluna fixa em zero
     if(raiz == -1){
         for(int l = 0; l < y; l++){
-            if(matriz[l][0] == max-1){
+            if(matriz[l][0] == 100){
                 raiz = matriz[l][0];
                 coordenadas[0] = l;
                 coordenadas[1] = 0;
@@ -28,7 +28,7 @@ int *achaEntrada(int x, int y, int max){
     //segundo caso - quando tenho a linha fixa em 0 e a coluna variando até cMax
     if(raiz == -1){
         for(int c = 0; c < x; c++){
-            if(matriz[c][0] == max-1){
+            if(matriz[c][0] == 100){
                 raiz = matriz[0][c];
                 coordenadas[0] = 0;
                 coordenadas[1] = c;
@@ -41,7 +41,7 @@ int *achaEntrada(int x, int y, int max){
     //terceiro caso - quando tenho a linha fixa em lMax-1 e coluna variando até Cmax
     if(raiz == -1){
         for(int c = 0; c < x; c++){
-            if(matriz[c][y-1] == max-1){
+            if(matriz[c][y-1] == 100){
                 raiz = matriz[y-1][c];
                 coordenadas[0] = y-1;
                 coordenadas[1] = c;
@@ -54,7 +54,7 @@ int *achaEntrada(int x, int y, int max){
     //quarto caso - quando tenho a linha variando de 0 a lMax e colina fixa em cMax-1
     if(raiz == -1){
         for(int l = 0; l < y; l++){
-            if(matriz[l][x-1] == max-1){
+            if(matriz[l][x-1] == 100){
                 raiz = matriz[l][x-1];
                 coordenadas[0] = l;
                 coordenadas[1] = x-1;
@@ -112,7 +112,7 @@ int main(){
     }
 
     int *inicio = new int[2]; //vetor coordenadas do inicio do labirinto
-    inicio = achaEntrada(colunas,linhas,max); //insiro as coordenadas do inicio
+    inicio = achaEntrada(colunas,linhas); //insiro as coordenadas do inicio
     cout << "Entrada do Labirinto: ";
     for(int i = 0; i < 2; i++){
         if(i == 1){ cout << "x"; }
