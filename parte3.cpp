@@ -71,6 +71,7 @@ int *achaEntrada(int x, int y){
 class Nodo {
     private:
         int l,c, valor;
+        char posicao;
 
     public:
         Nodo *esq, *dir, *meio, *pai;
@@ -99,6 +100,16 @@ class Nodo {
         }
         int getValor() {
             return valor;
+        }
+        char getPos(){
+            return posicao;
+        }
+        int setPos(char pos){
+            posicao = pos;
+            return 1;
+        }
+        void mostra(){
+            cout << "["<< getL() << "," << getC() << "]" << getPos() << " ";
         }
 
         Nodo *getEsq() {
@@ -160,6 +171,7 @@ class Arvore{
                     Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na esquerda.
                     novoNodo->setPai(raiz);
                     raiz->setEsq(novoNodo);
+                    raiz->getEsq()->setPos('E');
                 } else {
                     //ja tem filho a esquerda
                     insereAux(raiz->getEsq(), l,c, newValor);// Pega o Nodo a esquerda e a chave como parametro.
@@ -170,6 +182,7 @@ class Arvore{
                     Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
                     novoNodo->setPai(raiz);
                     raiz->setDir(novoNodo);
+                    raiz->getDir()->setPos('D');
                 } else {
                     insereAux(raiz->getDir(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                 }
@@ -179,6 +192,7 @@ class Arvore{
                     Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
                     novoNodo->setPai(raiz);
                     raiz->setMeio(novoNodo);
+                    raiz->getMeio()->setPos('M');
                 } else {
                     insereAux(raiz->getMeio(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                 }
@@ -192,7 +206,7 @@ class Arvore{
         void mostra(Nodo *raiz) {//PrÃ©-fixada.
             if(raiz != NULL) {
                 //cout << raiz->getValor() << "=>"<< nivel << endl;// printa
-                cout << "["<< raiz->getL() << "," << raiz->getC() << "] ";// printa
+                raiz->mostra();//cout << "["<< raiz->getL() << "," << raiz->getC() << "] ";// printa
                 mostra(raiz->getEsq());
                 mostra(raiz->getMeio());
                 mostra(raiz->getDir());
@@ -212,6 +226,7 @@ class Arvore{
                 if(matriz[linhaAtual-1][colunaAtual] != 0){
                     cout << "tento inserir filho esquerda" << endl;
                     insere(linhaAtual-1, colunaAtual, matriz[linhaAtual-1][colunaAtual]);
+                    //raiz->getEsq()->setPos('E');
                 }
             }//esquerda
 
@@ -221,6 +236,7 @@ class Arvore{
                 if(matriz[linhaAtual][colunaAtual+1] != 0){
                     cout << "tento inserir filho no meio" << endl;
                     insere(linhaAtual, colunaAtual+1, matriz[linhaAtual][colunaAtual+1]);
+                    //raiz->getMeio()->setPos('M');
                 }
             }//meio
 
@@ -230,6 +246,7 @@ class Arvore{
                 if(matriz[linhaAtual+1][colunaAtual] != 0){
                     cout << "tento inserir filho direita" << endl;
                     insere(linhaAtual+1, colunaAtual, matriz[linhaAtual+1][colunaAtual]);
+                    //raiz->getDir()->setPos('D');
                 }
             }//direito
             //fazer comparacao se ja existe
