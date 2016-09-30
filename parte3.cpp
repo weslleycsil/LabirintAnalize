@@ -1,12 +1,76 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <iomanip>
 
 using namespace std;
+int **matriz;
+int colunas,linhas;
+
+int *achaEntrada(int x, int y){
+    int raiz = -1;
+    int *coordenadas = new int[2];
+
+    //preciso percorrer as cabeceiras da matriz para descobrir a entrada do labirinto
+
+    //primeiro caso - quando tenho a linha variando de 0 a lMax e coluna fixa em zero
+    if(raiz == -1){
+        for(int l = 0; l < y; l++){
+            if(matriz[l][0] == 100){
+                raiz = matriz[l][0];
+                coordenadas[0] = l;
+                coordenadas[1] = 0;
+                //cout << "Primeiro caso" << endl;
+                l = y;
+            }
+        }
+    }
+
+    //segundo caso - quando tenho a linha fixa em 0 e a coluna variando até cMax
+    if(raiz == -1){
+        for(int c = 0; c < x; c++){
+            if(matriz[c][0] == 100){
+                raiz = matriz[0][c];
+                coordenadas[0] = 0;
+                coordenadas[1] = c;
+                //cout << "Segundo Caso" << endl;
+                c = x;
+            }
+        }
+    }
+    
+    //terceiro caso - quando tenho a linha fixa em lMax-1 e coluna variando até Cmax
+    if(raiz == -1){
+        for(int c = 0; c < x; c++){
+            if(matriz[c][y-1] == 100){
+                raiz = matriz[y-1][c];
+                coordenadas[0] = y-1;
+                coordenadas[1] = c;
+                //cout << "Terceiro Caso" << endl;
+                c = x;
+            }
+        }
+    }
+
+    //quarto caso - quando tenho a linha variando de 0 a lMax e colina fixa em cMax-1
+    if(raiz == -1){
+        for(int l = 0; l < y; l++){
+            if(matriz[l][x-1] == 100){
+                raiz = matriz[l][x-1];
+                coordenadas[0] = l;
+                coordenadas[1] = x-1;
+                //cout << "Quarto Caso" << endl;
+                l = y;
+            }
+        }
+    }
+
+    return coordenadas;
+}
 
 class Nodo {
     private:
-        int l,c;
+        int l,c, valor;
 
     public:
         Nodo *esq, *dir, *meio, *pai;
@@ -17,9 +81,10 @@ class Nodo {
             meio = NULL;
             pai = NULL;
         }
-        Nodo(int newL, int newC) {
+        Nodo(int newL, int newC, int newValor) {
             this->l = newL;
             this->c = newC;
+            this->valor = newValor;
             esq = NULL;
             meio = NULL;
             dir = NULL;
@@ -31,6 +96,9 @@ class Nodo {
         }
         int getC() {
             return c;
+        }
+        int getValor() {
+            return valor;
         }
 
         Nodo *getEsq() {
@@ -77,42 +145,42 @@ class Arvore{
         }
 
         // InserÃ§Ã£o
-        void insere(int l, int c) {
+        void insere(int l, int c, int newValor) {
             if(raiz == NULL) {// Arvore esta vazia?
-                raiz = new Nodo(l, c);// Sim, Cria raiz.
+                raiz = new Nodo(l, c, newValor);// Sim, Cria raiz.
             } else {
-               insereAux(raiz, l, c); // NÃ£o, InserÃ§Ã£o recurssiva.
+               insereAux(raiz, l, c, newValor); // NÃ£o, InserÃ§Ã£o recurssiva.
             }
         }
 
-        void insereAux(Nodo *raiz, int l, int c) {// Recurssivo.
+        void insereAux(Nodo *raiz, int l, int c, int newValor) {// Recurssivo.
             if(l < raiz->getL()){
                 //insere a esquerda
                 if(raiz->getEsq() == NULL) {// Raiz nÃ£o tem filho a esquerda?
-                    Nodo *novoNodo = new Nodo(l,c);// Cria um novo Nodo e o seta na esquerda.
+                    Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na esquerda.
                     novoNodo->setPai(raiz);
                     raiz->setEsq(novoNodo);
                 } else {
                     //ja tem filho a esquerda
-                    insereAux(raiz->getEsq(), l,c);// Pega o Nodo a esquerda e a chave como parametro.
+                    insereAux(raiz->getEsq(), l,c, newValor);// Pega o Nodo a esquerda e a chave como parametro.
                 }
             } else if (l > raiz->getL()){
                 //insere a direita
                 if(raiz ->getDir() == NULL) {// Raiz nÃ£o tem filho a direita?
-                    Nodo *novoNodo = new Nodo(l,c);// Cria um novo Nodo e o seta na direita.
+                    Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
                     novoNodo->setPai(raiz);
                     raiz->setDir(novoNodo);
                 } else {
-                    insereAux(raiz->getDir(), l,c);// Pega o Nodo a direita e a chave como parametro.
+                    insereAux(raiz->getDir(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                 }
             } else {
                 //insere no meio
                 if(raiz ->getMeio() == NULL) {// Raiz nÃ£o tem filho no meio?
-                    Nodo *novoNodo = new Nodo(l,c);// Cria um novo Nodo e o seta na direita.
+                    Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
                     novoNodo->setPai(raiz);
                     raiz->setMeio(novoNodo);
                 } else {
-                    insereAux(raiz->getMeio(), l,c);// Pega o Nodo a direita e a chave como parametro.
+                    insereAux(raiz->getMeio(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                 }
             }
         }
@@ -124,29 +192,118 @@ class Arvore{
         void mostra(Nodo *raiz) {//PrÃ©-fixada.
             if(raiz != NULL) {
                 //cout << raiz->getValor() << "=>"<< nivel << endl;// printa
-                cout << raiz->getL() << "," << raiz->getC() << " ";// printa
+                cout << "["<< raiz->getL() << "," << raiz->getC() << "] ";// printa
                 mostra(raiz->getEsq());
                 mostra(raiz->getMeio());
                 mostra(raiz->getDir());
             }
         }
 
+        void preencheArvore(Nodo *raiz){
+            
+            if(raiz != NULL) {
+                cout << "Recursividade" << endl;
+                int linhaAtual = raiz->getL();
+            int colunaAtual = raiz->getC();
+
+            if(linhaAtual-1 < linhas){
+                //verifico se o valor da linha é diferente de 0
+                cout << "Filho esquerda" << endl;
+                if(matriz[linhaAtual-1][colunaAtual] != 0){
+                    cout << "tento inserir filho esquerda" << endl;
+                    insere(linhaAtual-1, colunaAtual, matriz[linhaAtual-1][colunaAtual]);
+                }
+            }//esquerda
+
+            if(colunaAtual+1 < colunas){
+                //verifico se o valor da linha é diferente de 0
+                cout << "filho do meio" << endl;
+                if(matriz[linhaAtual][colunaAtual+1] != 0){
+                    cout << "tento inserir filho no meio" << endl;
+                    insere(linhaAtual, colunaAtual+1, matriz[linhaAtual][colunaAtual+1]);
+                }
+            }//meio
+
+            if(linhaAtual+1 < linhas){
+                //verifico se o valor da linha é diferente de 0
+                cout << "Filho da direita" << endl;
+                if(matriz[linhaAtual+1][colunaAtual] != 0){
+                    cout << "tento inserir filho direita" << endl;
+                    insere(linhaAtual+1, colunaAtual, matriz[linhaAtual+1][colunaAtual]);
+                }
+            }//direito
+            //fazer comparacao se ja existe
+                preencheArvore(raiz->getEsq());
+                preencheArvore(raiz->getMeio());
+                preencheArvore(raiz->getDir());
+            }
+        }
+
 };
 
 int main() {
+    
+    int max;
+    //string fname;
+    char key[3];
+    char fname[256];
+
+    cout << "Digite o nome da imagem" << endl;
+    cin >> fname;
+    FILE *arq;
+    arq = fopen(fname , "r");
+    if(arq == NULL) {
+        cout << "Erro na abertura do arquivo " << fname << endl;
+    }
+
+    //chamar upload de PGM
+    int i,j;
+    fscanf(arq, "%s", key) ;
+    fscanf(arq, "%d %d %d", &colunas, &linhas, &max) ;
+    /*le os dados da imagem e armazena na matriz*/
+
+    //alocação da matriz
+    matriz = new int*[linhas];
+    for (int i = 0; i < linhas; i++) {
+        //colunas
+        matriz[i] = new int[colunas];
+    }
+
+    //percorro inserindo valores na matriz
+    for(i=0; i < linhas; i++){
+        for(j=0; j < colunas; j++){
+            fscanf(arq, " %d ", &matriz[i][j]);
+        }
+    }
+
+    fclose(arq);
+
+    for(i=0; i < linhas; i++){
+        for(j=0; j < colunas; j++){
+            cout << setw(4) << matriz[i][j];// setw(3) é o espaçamento
+        }
+        cout << endl;
+    }
+
+    int *inicio = new int[2]; //vetor coordenadas do inicio do labirinto
+    inicio = achaEntrada(colunas,linhas); //insiro as coordenadas do inicio
+    cout << "Entrada do Labirinto: ";
+    for(int i = 0; i < 2; i++){
+        if(i == 1){ cout << "x"; }
+        cout << inicio[i];
+    }
+    cout << endl;
+
+    
+    
+    
+    
+    
     Arvore test;
    
-    test.insere(1,0);
-    test.insere(1,1);
-    test.insere(1,2);
-    test.insere(1,3);
-    test.insere(2,3);
-    test.insere(3,3);
-    test.insere(4,3);
-    test.insere(4,4);
-    test.insere(4,5);
-    test.insere(4,6);
-    test.insere(4,7);
+    test.insere(inicio[0],inicio[1],matriz[inicio[0]][inicio[1]]);
+
+    test.preencheArvore(test.getRaiz());
     
     //test.consulta(13);
       
