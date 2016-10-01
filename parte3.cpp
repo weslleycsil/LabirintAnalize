@@ -205,12 +205,30 @@ class Arvore{
 
         void mostra(Nodo *raiz) {//PrÃ©-fixada.
             if(raiz != NULL) {
-                //cout << raiz->getValor() << "=>"<< nivel << endl;// printa
-                raiz->mostra();//cout << "["<< raiz->getL() << "," << raiz->getC() << "] ";// printa
+                raiz->mostra();
                 mostra(raiz->getEsq());
                 mostra(raiz->getMeio());
                 mostra(raiz->getDir());
             }
+        }
+
+        int consultaNodo(int l, int c, Nodo *raiz){
+            int retorno = 0;
+            if(raiz != NULL) {
+                raiz->mostra();
+                cout << ((raiz->getL() == l) && (raiz->getC() == c)) << endl;
+                if((raiz->getL() == l) && (raiz->getC() == c)){
+                    cout << retorno <<endl;
+                    retorno = 1;
+                    cout << retorno <<endl;
+                    return 1;
+                }
+                retorno = consultaNodo(l,c,raiz->getEsq());
+                retorno = consultaNodo(l,c,raiz->getMeio());
+                retorno = consultaNodo(l,c,raiz->getDir());
+            }
+            return retorno;
+
         }
 
         void preencheArvore(Nodo *raiz){
@@ -224,6 +242,9 @@ class Arvore{
                 //verifico se o valor da linha é diferente de 0
                 cout << "Filho esquerda" << endl;
                 if(matriz[linhaAtual-1][colunaAtual] != 0){
+                    if(1){
+
+                    }
                     cout << "tento inserir filho esquerda" << endl;
                     insere(linhaAtual-1, colunaAtual, matriz[linhaAtual-1][colunaAtual]);
                     //raiz->getEsq()->setPos('E');
@@ -321,6 +342,8 @@ int main() {
     test.insere(inicio[0],inicio[1],matriz[inicio[0]][inicio[1]]);
 
     test.preencheArvore(test.getRaiz());
+
+    cout << "Valor: " << test.consultaNodo(1,2,test.getRaiz()) << endl;
     
     //test.consulta(13);
       
@@ -332,7 +355,7 @@ int main() {
     test.mostra(test.getRaiz(), 0);*/
 
     // Mostra em ordem.
-    cout << "\nPercorrendo em ordem...\n";
+    cout << "\n--Percorrendo em ordem...--\n";
     test.mostra(test.getRaiz());
     /*
     // Mostra invertido.
