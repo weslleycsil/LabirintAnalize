@@ -1,9 +1,13 @@
 #include <stdlib.h>
 #include <iostream>
 #include <string>
+#include <fstream>
 #include <iomanip>
 
 using namespace std;
+using std::fstream;
+using std::ios;
+
 int **matriz;
 int **matrizAux; 
 
@@ -68,6 +72,29 @@ int *achaEntrada(int x, int y){
     }
 
     return coordenadas;
+}
+
+int gravaResol(char * nomeArq){
+
+            ofstream myfile;
+            myfile.open (nomeArq, ios::out);
+            
+            //cabeçalho
+            myfile << "P2" << endl;
+            myfile << colunas << " " << linhas << endl;
+            myfile << "255" << endl;
+            //conteudo da matrizAux
+            for(int i=0; i < linhas; i++){
+                for(int j=0; j < colunas; j++){
+                    myfile << setw(4) << matrizAux[i][j];// setw(3) é o espaçamento
+                }
+            myfile << endl;
+            }
+
+            myfile.close();
+            cout << "Resolução Gerada em Arquivo!" << endl;
+            return 1;
+
 }
 
 class Nodo {
@@ -167,7 +194,7 @@ class Arvore{
         }
 
         void insereAux(Nodo *raiz, int l, int c, int newValor) {// Recurssivo.
-            //cout << "Inserindo ou tentando: L-> " << l << " C-> " << c << endl;
+            cout << "Inserindo ou tentando: L-> " << l << " C-> " << c << endl;
             //cout << "Consulta: " << (consulta(l, c) != 1) << endl;
             if(consulta(l, c) != 1){
                 if(l < raiz->getL()){
@@ -253,6 +280,9 @@ class Arvore{
         void preencheArvore(Nodo *raiz){
             cout << "Raiz: " << (raiz!=NULL) <<endl;
             if(raiz != NULL) {
+                if(raiz->getValor() == 200){
+                    cout << "---------- Cheguei na saida! coordenadas: " << raiz->getL() << "x" << raiz->getC() << " ----------" << endl;
+                }
                 cout << "Recursividade" << endl;
                 int linhaAtual = raiz->getL();
                 int colunaAtual = raiz->getC();
@@ -263,69 +293,74 @@ class Arvore{
                     if(matriz[linhaAtual-1][colunaAtual] != 0){
                         cout << "tento inserir filho esquerda" << endl;
                         insere(linhaAtual-1, colunaAtual, matriz[linhaAtual-1][colunaAtual],raiz);
-                        //raiz->getEsq()->setPos('E');
                     }
                 }//esquerda
 
                 if(colunaAtual+1 < colunas){
                     //verifico se o valor da linha é diferente de 0
-                    //cout << "filho do meio" << endl;
+                    cout << "filho do meio" << endl;
                     if(matriz[linhaAtual][colunaAtual+1] != 0){
-                        //cout << "tento inserir filho no meio" << endl;
+                        cout << "tento inserir filho no meio" << endl;
                         insere(linhaAtual, colunaAtual+1, matriz[linhaAtual][colunaAtual+1],raiz);
-                        //raiz->getMeio()->setPos('M');
                     }
                 }//meio
 
                 if(linhaAtual+1 < linhas){
                     //verifico se o valor da linha é diferente de 0
-                    //cout << "Filho da direita" << endl;
+                    cout << "Filho da direita" << endl;
                     if(matriz[linhaAtual+1][colunaAtual] != 0){
-                        //cout << "tento inserir filho direita" << endl;
+                        cout << "tento inserir filho direita" << endl;
                         insere(linhaAtual+1, colunaAtual, matriz[linhaAtual+1][colunaAtual],raiz);
-                        //raiz->getDir()->setPos('D');
                     }
                 }//direito
                 //fazer comparacao se ja existe
-                //cout << "Chamo da esquerda" << endl;
+                cout << "Chamo da esquerda" << endl;
                 preencheArvore(raiz->getEsq());
-                //cout << "Chamo do Meio" << endl;
+                cout << "Chamo do Meio" << endl;
                 preencheArvore(raiz->getMeio());
-                //cout << "Chamo da Direta" << endl;
+                cout << "Chamo da Direta" << endl;
                 preencheArvore(raiz->getDir());
             }
         }
 
         Nodo *busca(int valor, Nodo **raiz) {
             if(*raiz != NULL) {
+                (*raiz)->mostra();
+                cout << "---" << endl;
                 if(valor == (*raiz)->getValor()) {
                     cout << "Achei" <<endl;
                     return * raiz;
                 }
-
+                cout << "chamei direita" << endl;
                 if((*raiz)->dir != NULL){
                     return busca(valor, &(*raiz)->dir);
                 }
+                cout << "chamei meio" << endl;
                 if((*raiz)->meio != NULL){
                     return busca(valor, &(*raiz)->meio);
-                }
+                } 
+                cout << "chamei esq" << endl;
                 if((*raiz)->esq != NULL){
                     return busca(valor, &(*raiz)->esq);
                 }
+                cout << "PORRRAAAA!!!!" << endl;
             }
         }
+
 
         void pais(Nodo *saida){
             if(saida != NULL) {
                 saida->mostra();
+                matrizAux[saida->getL()][saida->getC()]= 150;
                 pais(saida->getPai());
             }
         }
 
         void paisRecursivos(){
             int saida = 200;
-            Nodo *noBusca;
-            noBusca = busca(saida, &raiz); // retorno o nodo saida do lab
+            Nodo *noBusca;            
+            noBusca =  busca(saida, &raiz); // retorno o nodo saida do lab
+            noBusca->mostra();
             pais(noBusca);
 
         }
@@ -338,16 +373,25 @@ class Arvore{
 int main() {
     
     int max;
-    //string fname;
+    char ext[5] = ".pgm";
+    char ext2[11] = "-resol.pgm";
     char key[3];
     char fname[256];
+    char arquivoResol[300];
+    char * arquivo;
+    
 
     cout << "Digite o nome da imagem" << endl;
     cin >> fname;
+    
+    strcpy(arquivoResol,fname);
+    strcat(arquivoResol,ext2);
+
+    arquivo = strcat(fname,ext);
     FILE *arq;
-    arq = fopen(fname , "r");
+    arq = fopen(arquivo, "r");
     if(arq == NULL) {
-        cout << "Erro na abertura do arquivo " << fname << endl;
+        cout << "Erro na abertura do arquivo " << arquivo << endl;
     }
 
     //chamar upload de PGM
@@ -362,7 +406,7 @@ int main() {
         //colunas
         matriz[i] = new int[colunas];
     }
-    //alocação da Matriz auxilia
+    //alocação da Matriz auxiliar
     matrizAux = new int*[linhas];
     for (int i = 0; i < linhas; i++) {
         //colunas
@@ -373,6 +417,12 @@ int main() {
     for(i=0; i < linhas; i++){
         for(j=0; j < colunas; j++){
             fscanf(arq, " %d ", &matriz[i][j]);
+        }
+    }
+
+    for(i=0; i < linhas; i++){
+        for(j=0; j < colunas; j++){
+            matrizAux[i][j] = matriz[i][j];// setw(3) é o espaçamento
         }
     }
 
@@ -423,12 +473,23 @@ int main() {
     cout << "\n ---------\n"<< endl;
     //teste = test.busca(200,test.getRaiz());
     //teste->mostra();
-    //test.consulta(10);
+    //cout << test.consulta(4,7) << endl;
     test.paisRecursivos();
-    /*
-    // Mostra invertido.
-    cout << "\nPercorrendo pos..\n";
-    test.mostraPos(test.getRaiz());*/
+
+    /*cout << "\n-------MATRIZ Auxiliar-------\n";
+
+    for(i=0; i < linhas; i++){
+        for(j=0; j < colunas; j++){
+            cout << setw(4) << matrizAux[i][j];// setw(3) é o espaçamento
+        }
+        cout << endl;
+    }*/
+
+
+    //Gravo o arquivo Resolução
+    gravaResol(arquivoResol);
+
+
 
 }
 
