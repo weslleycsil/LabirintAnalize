@@ -213,21 +213,18 @@ class Arvore{
         }
 
         int consultaNodo(int l, int c, Nodo *raiz){
-            int retorno = 0;
+            int val = 0;
             if(raiz != NULL) {
                 raiz->mostra();
                 cout << ((raiz->getL() == l) && (raiz->getC() == c)) << endl;
                 if((raiz->getL() == l) && (raiz->getC() == c)){
-                    cout << retorno <<endl;
-                    retorno = 1;
-                    cout << retorno <<endl;
                     return 1;
                 }
-                retorno = consultaNodo(l,c,raiz->getEsq());
-                retorno = consultaNodo(l,c,raiz->getMeio());
-                retorno = consultaNodo(l,c,raiz->getDir());
+                val += consultaNodo(l,c,raiz->getEsq());
+                val += consultaNodo(l,c,raiz->getMeio());
+                val += consultaNodo(l,c,raiz->getDir());
             }
-            return retorno;
+            return val;
 
         }
 
