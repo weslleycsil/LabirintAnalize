@@ -360,6 +360,44 @@ class Arvore{
         }
 
         Nodo *busca(int valor, Nodo **raiz) {
+            Nodo *noDireita,*noFrente,*noEsquerda,*noTras, *retorno;
+            if(*raiz != NULL) {
+                (*raiz)->mostra();
+                cout << "---" << endl;
+                if(valor == (*raiz)->getValor()) {
+                    cout << "Achei" <<endl;
+                    return * raiz;
+                }
+                cout << "chamei direita" << endl;
+                if(busca(valor, &(*raiz)->dir) != NULL){
+                    //cout << "Nao é nulo" << endl;
+                    retorno = busca(valor, &(*raiz)->dir);
+                }
+
+                cout << "chamei frente" << endl;
+                if(busca(valor, &(*raiz)->frente) != NULL){
+                    //cout << "Nao é nulo" << endl;
+                    retorno = busca(valor, &(*raiz)->frente);
+                }
+
+                cout << "chamei tras" << endl;
+                if(busca(valor, &(*raiz)->tras) != NULL){
+                    //cout << "Nao é nulo" << endl;
+                    retorno = busca(valor, &(*raiz)->tras);
+                }
+
+                cout << "chamei esq" << endl;
+                if(busca(valor, &(*raiz)->esq) != NULL){
+                    //cout << "Nao é nulo" << endl;
+                    retorno = busca(valor, &(*raiz)->esq);
+                }
+
+            }
+            return retorno;
+
+        }
+
+        Nodo *buscaOriginal(int valor, Nodo **raiz) {
             if(*raiz != NULL) {
                 (*raiz)->mostra();
                 cout << "---" << endl;
