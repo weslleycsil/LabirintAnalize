@@ -287,15 +287,16 @@ class Arvore{
         int consultaNodo(int l, int c, Nodo *raiz){
             int val = 0;
             if(raiz != NULL) {
-                //raiz->mostra();
+                raiz->mostra();
                 //cout << ((raiz->getL() == l) && (raiz->getC() == c)) << endl;
                 if((raiz->getL() == l) && (raiz->getC() == c)){
                     return 1;
                 }
-                val += consultaNodo(l,c,raiz->getEsq());
+                val += consultaNodo(l,c,raiz->getDir());
                 val += consultaNodo(l,c,raiz->getFrente());
                 val += consultaNodo(l,c,raiz->getTras());
-                val += consultaNodo(l,c,raiz->getDir());
+                val += consultaNodo(l,c,raiz->getEsq());
+                
             }
             return val;
 
@@ -512,7 +513,8 @@ int main() {
     cout << "\n ---------\n"<< endl;
     //teste = test.busca(200,test.getRaiz());
     //teste->mostra();
-    //cout << test.consulta(4,7) << endl;
+    cout << test.consulta(4,7) << endl;
+    cout << "\n ---------\n"<< endl;
     test.paisRecursivos();
 
     /*cout << "\n-------MATRIZ Auxiliar-------\n";
