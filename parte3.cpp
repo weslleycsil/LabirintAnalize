@@ -103,12 +103,13 @@ class Nodo {
         char posicao;
 
     public:
-        Nodo *esq, *dir, *meio, *pai;
+        Nodo *esq, *dir, *frente, *tras, *pai;
         // Construtor;
         Nodo() {
             esq = NULL;
             dir = NULL;
-            meio = NULL;
+            frente = NULL;
+            tras = NULL;
             pai = NULL;
         }
         Nodo(int newL, int newC, int newValor) {
@@ -116,7 +117,8 @@ class Nodo {
             this->c = newC;
             this->valor = newValor;
             esq = NULL;
-            meio = NULL;
+            frente = NULL;
+            tras = NULL;
             dir = NULL;
         }
 
@@ -149,8 +151,12 @@ class Nodo {
             return dir;
         }
 
-        Nodo *getMeio() {
-            return meio;
+        Nodo *getFrente() {
+            return frente;
+        }
+
+        Nodo *getTras() {
+            return tras;
         }
 
         Nodo *getPai() {
@@ -165,8 +171,11 @@ class Nodo {
             dir = Nodo;
         }
 
-        void *setMeio(Nodo *Nodo) {
-            meio = Nodo;
+        void *setFrente(Nodo *Nodo) {
+            frente = Nodo;
+        }
+        void *setTras(Nodo *Nodo) {
+            tras = Nodo;
         }
         
         void *setPai(Nodo *Nodo) {
@@ -224,18 +233,31 @@ class Arvore{
                     } else {
                         insereAux(raiz->getDir(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                     }
-                } else {
-                    //insere no meio
-                    if(raiz ->getMeio() == NULL) {// Raiz nÃ£o tem filho no meio?
+                } else if(c > raiz->getC()) {
+                    //insere na frente
+                    if(raiz ->getFrente() == NULL) {// Raiz nÃ£o tem filho no frente?
                         Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
                         novoNodo->setPai(raiz);
-                        raiz->setMeio(novoNodo);
-                        raiz->getMeio()->setPos('M');
+                        raiz->setFrente(novoNodo);
+                        raiz->getFrente()->setPos('F');
                         /*raiz->mostra();
-                        raiz->getMeio()->mostra();
+                        raiz->getFrente()->mostra();
                         cout << endl << endl;*/
                     } else {
-                        insereAux(raiz->getMeio(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
+                        insereAux(raiz->getFrente(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
+                    }
+                } else {
+                    //insere a tras
+                    if(raiz ->getTras() == NULL) {// Raiz nÃ£o tem filho no frente?
+                        Nodo *novoNodo = new Nodo(l,c, newValor);// Cria um novo Nodo e o seta na direita.
+                        novoNodo->setPai(raiz);
+                        raiz->setTras(novoNodo);
+                        raiz->getTras()->setPos('T');
+                        /*raiz->mostra();
+                        raiz->getFrente()->mostra();
+                        cout << endl << endl;*/
+                    } else {
+                        insereAux(raiz->getTras(), l,c, newValor);// Pega o Nodo a direita e a chave como parametro.
                     }
                 }
 
@@ -251,7 +273,8 @@ class Arvore{
                 raiz->mostra();
                 
                 mostra(raiz->getEsq());
-                mostra(raiz->getMeio());
+                mostra(raiz->getFrente());
+                mostra(raiz->getTras());
                 mostra(raiz->getDir());
             }
         }
@@ -270,7 +293,8 @@ class Arvore{
                     return 1;
                 }
                 val += consultaNodo(l,c,raiz->getEsq());
-                val += consultaNodo(l,c,raiz->getMeio());
+                val += consultaNodo(l,c,raiz->getFrente());
+                val += consultaNodo(l,c,raiz->getTras());
                 val += consultaNodo(l,c,raiz->getDir());
             }
             return val;
@@ -298,12 +322,21 @@ class Arvore{
 
                 if(colunaAtual+1 < colunas){
                     //verifico se o valor da linha é diferente de 0
-                    cout << "filho do meio" << endl;
+                    cout << "filho do frente" << endl;
                     if(matriz[linhaAtual][colunaAtual+1] != 0){
-                        cout << "tento inserir filho no meio" << endl;
+                        cout << "tento inserir filho no frente" << endl;
                         insere(linhaAtual, colunaAtual+1, matriz[linhaAtual][colunaAtual+1],raiz);
                     }
-                }//meio
+                }//frente
+
+                if((colunaAtual-1 < colunas) && (colunaAtual-1 >= 0)){
+                    //verifico se o valor da linha é diferente de 0
+                    cout << "filho de tras" << endl;
+                    if(matriz[linhaAtual][colunaAtual-1] != 0){
+                        cout << "tento inserir filho atras" << endl;
+                        insere(linhaAtual, colunaAtual-1, matriz[linhaAtual][colunaAtual-1],raiz);
+                    }
+                }//atras
 
                 if(linhaAtual+1 < linhas){
                     //verifico se o valor da linha é diferente de 0
@@ -316,8 +349,10 @@ class Arvore{
                 //fazer comparacao se ja existe
                 cout << "Chamo da esquerda" << endl;
                 preencheArvore(raiz->getEsq());
-                cout << "Chamo do Meio" << endl;
-                preencheArvore(raiz->getMeio());
+                cout << "Chamo o da Frente" << endl;
+                preencheArvore(raiz->getFrente());
+                cout << "Chamo o de Tras" << endl;
+                preencheArvore(raiz->getTras());
                 cout << "Chamo da Direta" << endl;
                 preencheArvore(raiz->getDir());
             }
@@ -335,15 +370,19 @@ class Arvore{
                 if((*raiz)->dir != NULL){
                     return busca(valor, &(*raiz)->dir);
                 }
-                cout << "chamei meio" << endl;
-                if((*raiz)->meio != NULL){
-                    return busca(valor, &(*raiz)->meio);
+                cout << "chamei frente" << endl;
+                if((*raiz)->frente != NULL){
+                    return busca(valor, &(*raiz)->frente);
+                }
+                cout << "chamei tras" << endl;
+                if((*raiz)->tras != NULL){
+                    return busca(valor, &(*raiz)->tras);
                 } 
                 cout << "chamei esq" << endl;
                 if((*raiz)->esq != NULL){
                     return busca(valor, &(*raiz)->esq);
                 }
-                cout << "PORRRAAAA!!!!" << endl;
+                cout << "FIM!!!!!!!!!" << endl;
             }
         }
 
