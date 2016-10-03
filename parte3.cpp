@@ -12,6 +12,7 @@ int **matriz;
 int **matrizAux; 
 
 int colunas,linhas;
+int sinalizador = 0;
 
 int *achaEntrada(int x, int y){
     int raiz = -1;
@@ -302,9 +303,32 @@ class Arvore{
 
         }
 
+        int consultaValor(int valor){
+            return consultaNodoVal(valor, getRaiz());
+
+        }
+        
+        int consultaNodoVal(int valor, Nodo *raiz){
+            int val = 0;
+            if(raiz != NULL) {
+                //raiz->mostra();
+                //cout << ((raiz->getL() == l) && (raiz->getC() == c)) << endl;
+                if(raiz->getValor() == 200){
+                    return 1;
+                }
+                val += consultaNodoVal(valor,raiz->getDir());
+                val += consultaNodoVal(valor,raiz->getFrente());
+                val += consultaNodoVal(valor,raiz->getTras());
+                val += consultaNodoVal(valor,raiz->getEsq());
+                
+            }
+            return val;
+
+        }
+
         void preencheArvore(Nodo *raiz){
             //cout << "Raiz: " << (raiz!=NULL) <<endl;
-            if(raiz != NULL) {
+            if((raiz != NULL) && (consultaValor(200) != 1)){
                 if(raiz->getValor() == 200){
                     cout << "---------- Cheguei na saida! coordenadas: " << raiz->getL() << "x" << raiz->getC() << " ----------" << endl;
                 }
@@ -368,29 +392,30 @@ class Arvore{
                     //(*raiz)->mostra();
                     //(*raiz)->getPai()->mostra();
                     //cout << (*raiz)->getValor() << endl;
-                    //cout << "Achei" <<endl;
+                    cout << "Achei" <<endl;
+                    sinalizador = 1;
                     return * raiz;
                 }
                 //cout << "chamei direita" << endl;
-                if((*raiz)->dir != NULL){
+                if(((*raiz)->dir != NULL) && (sinalizador == 0)){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->dir);
                 }
 
                 //cout << "chamei frente" << endl;
-                if((*raiz)->frente != NULL){
+                if(((*raiz)->frente != NULL) && (sinalizador == 0)){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->frente);
                 }
 
                 //cout << "chamei tras" << endl;
-                if((*raiz)->tras != NULL){
+                if(((*raiz)->tras != NULL) && (sinalizador == 0)){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->tras);
                 }
 
                 //cout << "chamei esq" << endl;
-                if((*raiz)->esq != NULL){
+                if(((*raiz)->esq != NULL) && (sinalizador == 0)){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->esq);
                 }
@@ -400,39 +425,9 @@ class Arvore{
 
         }
 
-
-        Nodo *buscaOriginal(int valor, Nodo **raiz) {
-            if(*raiz != NULL) {
-                (*raiz)->mostra();
-                cout << "---" << endl;
-                if(valor == (*raiz)->getValor()) {
-                    cout << "Achei" <<endl;
-                    return * raiz;
-                }
-                cout << "chamei direita" << endl;
-                if((*raiz)->dir != NULL){
-                    return busca(valor, &(*raiz)->dir);
-                }
-                cout << "chamei frente" << endl;
-                if((*raiz)->frente != NULL){
-                    return busca(valor, &(*raiz)->frente);
-                }
-                cout << "chamei tras" << endl;
-                if((*raiz)->tras != NULL){
-                    return busca(valor, &(*raiz)->tras);
-                } 
-                cout << "chamei esq" << endl;
-                if((*raiz)->esq != NULL){
-                    return busca(valor, &(*raiz)->esq);
-                }
-                cout << "FIM!!!!!!!!!" << endl;
-            }
-        }
-
-
         void pais(Nodo *saida){
             if(saida != NULL) {
-                saida->mostra();
+                //saida->mostra();
                 matrizAux[saida->getL()][saida->getC()]= 150;
                 pais(saida->getPai());
             }
@@ -442,8 +437,8 @@ class Arvore{
             int saida = 200;
             Nodo *noBusca;            
             noBusca =  busca(saida, &raiz); // retorno o nodo saida do lab
-            cout << "------ Nobusca-----";
-            noBusca->mostra();
+            //cout << "------ Nobusca-----";
+            //noBusca->mostra();
             pais(noBusca);
 
         }
@@ -556,7 +551,7 @@ int main() {
     cout << "\n ---------\n"<< endl;
     //teste = test.busca(200,test.getRaiz());
     //teste->mostra();
-    //cout << test.consulta(1,9) << endl;
+    cout << test.consulta(9,23) << endl;
     cout << "\n ---------\n"<< endl;
     test.paisRecursivos();
 
