@@ -203,7 +203,7 @@ class Arvore{
         }
 
         void insereAux(Nodo *raiz, int l, int c, int newValor) {// Recurssivo.
-            cout << "Inserindo ou tentando: L-> " << l << " C-> " << c << endl;
+            //cout << "Inserindo ou tentando: L-> " << l << " C-> " << c << endl;
             //cout << "Consulta: " << (consulta(l, c) != 1) << endl;
             if(consulta(l, c) != 1){
                 if(l < raiz->getL()){
@@ -287,7 +287,7 @@ class Arvore{
         int consultaNodo(int l, int c, Nodo *raiz){
             int val = 0;
             if(raiz != NULL) {
-                raiz->mostra();
+                //raiz->mostra();
                 //cout << ((raiz->getL() == l) && (raiz->getC() == c)) << endl;
                 if((raiz->getL() == l) && (raiz->getC() == c)){
                     return 1;
@@ -303,91 +303,94 @@ class Arvore{
         }
 
         void preencheArvore(Nodo *raiz){
-            cout << "Raiz: " << (raiz!=NULL) <<endl;
+            //cout << "Raiz: " << (raiz!=NULL) <<endl;
             if(raiz != NULL) {
                 if(raiz->getValor() == 200){
                     cout << "---------- Cheguei na saida! coordenadas: " << raiz->getL() << "x" << raiz->getC() << " ----------" << endl;
                 }
-                cout << "Recursividade" << endl;
+                //cout << "Recursividade" << endl;
                 int linhaAtual = raiz->getL();
                 int colunaAtual = raiz->getC();
-                cout << "Linha-> " << linhaAtual << " Coluna-> " << colunaAtual << endl;
+                //cout << "Linha-> " << linhaAtual << " Coluna-> " << colunaAtual << endl;
                 if((linhaAtual-1 < linhas) && (linhaAtual-1 >= 0)){// erro da posição 0
                     //verifico se o valor da linha é diferente de 0
-                    cout << "Filho esquerda" << endl;
+                    //cout << "Filho esquerda" << endl;
                     if(matriz[linhaAtual-1][colunaAtual] != 0){
-                        cout << "tento inserir filho esquerda" << endl;
+                        //cout << "tento inserir filho esquerda" << endl;
                         insere(linhaAtual-1, colunaAtual, matriz[linhaAtual-1][colunaAtual],raiz);
                     }
                 }//esquerda
 
                 if(colunaAtual+1 < colunas){
                     //verifico se o valor da linha é diferente de 0
-                    cout << "filho do frente" << endl;
+                    //cout << "filho do frente" << endl;
                     if(matriz[linhaAtual][colunaAtual+1] != 0){
-                        cout << "tento inserir filho no frente" << endl;
+                        //cout << "tento inserir filho no frente" << endl;
                         insere(linhaAtual, colunaAtual+1, matriz[linhaAtual][colunaAtual+1],raiz);
                     }
                 }//frente
 
                 if((colunaAtual-1 < colunas) && (colunaAtual-1 >= 0)){
                     //verifico se o valor da linha é diferente de 0
-                    cout << "filho de tras" << endl;
+                    //cout << "filho de tras" << endl;
                     if(matriz[linhaAtual][colunaAtual-1] != 0){
-                        cout << "tento inserir filho atras" << endl;
+                        //cout << "tento inserir filho atras" << endl;
                         insere(linhaAtual, colunaAtual-1, matriz[linhaAtual][colunaAtual-1],raiz);
                     }
                 }//atras
 
                 if(linhaAtual+1 < linhas){
                     //verifico se o valor da linha é diferente de 0
-                    cout << "Filho da direita" << endl;
+                    //cout << "Filho da direita" << endl;
                     if(matriz[linhaAtual+1][colunaAtual] != 0){
-                        cout << "tento inserir filho direita" << endl;
+                        //cout << "tento inserir filho direita" << endl;
                         insere(linhaAtual+1, colunaAtual, matriz[linhaAtual+1][colunaAtual],raiz);
                     }
                 }//direito
                 //fazer comparacao se ja existe
-                cout << "Chamo da esquerda" << endl;
+                //cout << "Chamo da esquerda" << endl;
                 preencheArvore(raiz->getEsq());
-                cout << "Chamo o da Frente" << endl;
+                //cout << "Chamo o da Frente" << endl;
                 preencheArvore(raiz->getFrente());
-                cout << "Chamo o de Tras" << endl;
+                //cout << "Chamo o de Tras" << endl;
                 preencheArvore(raiz->getTras());
-                cout << "Chamo da Direta" << endl;
+                //cout << "Chamo da Direta" << endl;
                 preencheArvore(raiz->getDir());
             }
         }
 
         Nodo *busca(int valor, Nodo **raiz) {
-            Nodo *noDireita,*noFrente,*noEsquerda,*noTras, *retorno;
+            Nodo *retorno;
             if(*raiz != NULL) {
-                (*raiz)->mostra();
-                cout << "---" << endl;
+                //(*raiz)->mostra();
+                //cout << "---" << endl;
                 if(valor == (*raiz)->getValor()) {
-                    cout << "Achei" <<endl;
+                    //(*raiz)->mostra();
+                    //(*raiz)->getPai()->mostra();
+                    //cout << (*raiz)->getValor() << endl;
+                    //cout << "Achei" <<endl;
                     return * raiz;
                 }
-                cout << "chamei direita" << endl;
-                if(busca(valor, &(*raiz)->dir) != NULL){
+                //cout << "chamei direita" << endl;
+                if((*raiz)->dir != NULL){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->dir);
                 }
 
-                cout << "chamei frente" << endl;
-                if(busca(valor, &(*raiz)->frente) != NULL){
+                //cout << "chamei frente" << endl;
+                if((*raiz)->frente != NULL){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->frente);
                 }
 
-                cout << "chamei tras" << endl;
-                if(busca(valor, &(*raiz)->tras) != NULL){
+                //cout << "chamei tras" << endl;
+                if((*raiz)->tras != NULL){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->tras);
                 }
 
-                cout << "chamei esq" << endl;
-                if(busca(valor, &(*raiz)->esq) != NULL){
+                //cout << "chamei esq" << endl;
+                if((*raiz)->esq != NULL){
                     //cout << "Nao é nulo" << endl;
                     retorno = busca(valor, &(*raiz)->esq);
                 }
@@ -396,6 +399,7 @@ class Arvore{
             return retorno;
 
         }
+
 
         Nodo *buscaOriginal(int valor, Nodo **raiz) {
             if(*raiz != NULL) {
@@ -438,6 +442,7 @@ class Arvore{
             int saida = 200;
             Nodo *noBusca;            
             noBusca =  busca(saida, &raiz); // retorno o nodo saida do lab
+            cout << "------ Nobusca-----";
             noBusca->mostra();
             pais(noBusca);
 
@@ -551,7 +556,7 @@ int main() {
     cout << "\n ---------\n"<< endl;
     //teste = test.busca(200,test.getRaiz());
     //teste->mostra();
-    cout << test.consulta(4,7) << endl;
+    //cout << test.consulta(1,9) << endl;
     cout << "\n ---------\n"<< endl;
     test.paisRecursivos();
 
