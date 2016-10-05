@@ -194,7 +194,7 @@ class Arvore{
             raiz = NULL;
         }
 
-        // InserÃ§Ã£o
+        // Inserção
         void insere(int l, int c, int newValor, Nodo *raizAtual) {
             if(raizAtual == NULL) {// Arvore esta vazia?
                 raiz = new Nodo(l, c, newValor);// Sim, Cria raiz.
@@ -269,7 +269,7 @@ class Arvore{
             return raiz;
         }
 
-        void mostra(Nodo *raiz) {//PrÃ©-fixada.
+        void mostra(Nodo *raiz) {
             if(raiz != NULL) {
                 raiz->mostra();
                 
@@ -328,7 +328,7 @@ class Arvore{
 
         void preencheArvore(Nodo *raiz){
             //cout << "Raiz: " << (raiz!=NULL) <<endl;
-            if((raiz != NULL) && (consultaValor(200) != 1)){
+            if((raiz != NULL) && (consultaValor(200) != 1)){ // ou seja enquanto a raiz diferente de null e enquanto a saida do labirinto nao estiver na arvore
                 if(raiz->getValor() == 200){
                     cout << "---------- Cheguei na saida! coordenadas: " << raiz->getL() << "x" << raiz->getC() << " ----------" << endl;
                 }
@@ -392,7 +392,7 @@ class Arvore{
                     //(*raiz)->mostra();
                     //(*raiz)->getPai()->mostra();
                     //cout << (*raiz)->getValor() << endl;
-                    cout << "Achei" <<endl;
+                    //cout << "Achei" <<endl;
                     sinalizador = 1;
                     return * raiz;
                 }
@@ -498,6 +498,7 @@ int main() {
         }
     }
 
+    //faço copia da matriz principal para a auxiliar
     for(i=0; i < linhas; i++){
         for(j=0; j < colunas; j++){
             matrizAux[i][j] = matriz[i][j];// setw(3) é o espaçamento
@@ -506,12 +507,14 @@ int main() {
 
     fclose(arq);
 
-    for(i=0; i < linhas; i++){
+
+    //printa a matriz do labirinto
+    /*for(i=0; i < linhas; i++){
         for(j=0; j < colunas; j++){
             cout << setw(4) << matriz[i][j];// setw(3) é o espaçamento
         }
         cout << endl;
-    }
+    }*/
 
     int *inicio = new int[2]; //vetor coordenadas do inicio do labirinto
     inicio = achaEntrada(colunas,linhas); //insiro as coordenadas do inicio
@@ -524,46 +527,16 @@ int main() {
 
     
     
+    //criação da arvore que ira conter os caminhos do labirinto
     
     
-    
-    Arvore test;
-    Nodo * teste;
+    Arvore labirinto;
    
-    test.insere(inicio[0],inicio[1],matriz[inicio[0]][inicio[1]],test.getRaiz());
+    labirinto.insere(inicio[0],inicio[1],matriz[inicio[0]][inicio[1]],labirinto.getRaiz());
 
-    test.preencheArvore(test.getRaiz());
+    labirinto.preencheArvore(labirinto.getRaiz());
 
-    //cout << "Valor: " << test.consultaNodo(1,2,test.getRaiz()) << endl;
-    
-    //test.consulta(13);
-      
-    //test.remove(12); 
-    
-    /*
-    // Mostra iniciando da raiz.
-    cout << "\nPercorrendo pre..\n";
-    test.mostra(test.getRaiz(), 0);*/
-
-    // Mostra em ordem.
-    cout << "\n--Percorrendo em ordem...--\n";
-    test.mostra(test.getRaiz());
-    cout << "\n ---------\n"<< endl;
-    //teste = test.busca(200,test.getRaiz());
-    //teste->mostra();
-    cout << test.consulta(9,23) << endl;
-    cout << "\n ---------\n"<< endl;
-    test.paisRecursivos();
-
-    /*cout << "\n-------MATRIZ Auxiliar-------\n";
-
-    for(i=0; i < linhas; i++){
-        for(j=0; j < colunas; j++){
-            cout << setw(4) << matrizAux[i][j];// setw(3) é o espaçamento
-        }
-        cout << endl;
-    }*/
-
+    labirinto.paisRecursivos();
 
     //Gravo o arquivo Resolução
     gravaResol(arquivoResol);
